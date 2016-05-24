@@ -1,0 +1,13 @@
+<h1 style="text-align: center;">Home Page</h1>
+<article class="blog-post" ng-repeat="post in posts">
+    <div class="blog-post-image">
+        <a href="post.html"><img src="images/750x500-1.jpg" alt=""></a>
+    </div>
+    <div class="blog-post-body">
+        <h2><a href="post.html">{{post.title}}</a></h2>
+        <div class="post-meta">
+            <span><i class="fa fa-clock-o"></i>{{post.postDate}}</span>
+            <p>{{post.excerpt}}</p>
+            <div class="read-more"><a href="#">Continue Reading</a></div>
+        </div>
+</article>
