@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------
+3/*------------------------------------------------------------------
 [Color codes]
 Buttons, etc:	#726FB9 (blue)
 hover color:	#fed136 (yellow)
@@ -90,12 +90,6 @@ header {
 	text-align: center;
 	padding: 20px 0;
 }
-.blog-post .blog-post-body h2 {
-	margin: 0;
-	padding: 15px 0px 20px;
-	font-size: 41px;
-	line-height: 49px;
-}
 .blog-post .blog-post-body p {
 	text-align: justify;
 	font-size: 20px;
@@ -174,6 +168,29 @@ header {
 	letter-spacing: 0.1px;
 	margin-bottom: 30px;
 }
+/* Category Posts */
+.list-thumbnail {
+  list-style-type: none;
+}
+.list-thumbnail a li p {
+  color: #000;
+}
+.list-item-thumbnail {
+  padding: 10px;
+  overflow: auto;
+}
+.list-item-thumbnail img {
+  float: left;
+  margin: 0 15px 0 0;
+}
+.list-item-thumbnail h3 {
+  font-weight: bold;
+}
+.list-item-thumbnail:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
 /*- Sidebar -*/
 .sidebar-title {
 	background-color: #2B2B2B;

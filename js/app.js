@@ -2,15 +2,14 @@
  * Main AngularJS Web Application
  */
 var app = angular.module('bradyThinkApp', [
-	'ngRoute'
+	'ngRoute', 'ui.bootstrap'
 ]);
-
 /**
  * Configure the Routes
  */
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	$routeProvider
-		// Home
+	// Home
 		.when("/", {
 			templateUrl: "partials/home.html",
 			controller: "HomeCtrl"
@@ -22,9 +21,15 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 		})
 		.when("/:category", {
 			templateUrl: function(parameters) {
-				return 'partials/' + parameters.category + '.html';
+				return 'partials/category.html';
 			},
 			controller: "CategoryCtrl"
+		})
+		.when("/:category/:slug", {
+			templateUrl: function(parameters) {
+				return 'partials/post.html';
+			},
+			controller: "PostCtrl"
 		})
 		// else 404
 		.otherwise("/404", {
@@ -33,6 +38,16 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 		});
 	$locationProvider.html5Mode(true);
 }]);
+
+app.filter('offset', function() {
+	return function(input, start) {
+		if (!input || !input.length) {
+			return;
+		}
+		start = +start; //parse to int
+		return input.slice(start);
+	};
+});
 
 app.controller('HomeCtrl', ['$scope', '$http', 'MetaData', function($scope, $http, MetaData) {
 	MetaData.setTitle('BradyThink');
@@ -47,14 +62,39 @@ app.controller('AboutCtrl', ['$scope', 'MetaData', function($scope, MetaData) {
 	MetaData.setDescription('BradyThink Blog About Description');
 }]);
 
-app.controller('CategoryCtrl', ['$sce', '$scope', '$routeParams', '$http', 'MetaData',
-	function($sce, $scope, $routeParams, $http, MetaData) {
-		$http.get('data/' + $routeParams.category + '.json').success(function(data) {
-			MetaData.setTitle(data.title);
-			MetaData.setDescription(data.description);
+app.controller('CategoryCtrl', ['$sce', '$scope', '$routeParams', '$http', 'MetaData', '$filter',
+	function($sce, $scope, $routeParams, $http, MetaData, $filter) {
+		$scope.currentPage = 1;
+		$scope.itemsPerPage = 5;
+		$scope.maxSize = 5;
+
+		$http.get('data/' + $routeParams.category + '/category.json').success(function(data) {
+			MetaData.setTitle(data.metaTitle);
+			MetaData.setDescription(data.metaDescription);
+			$scope.category = data;
 		});
-		$http.get('data/' + $routeParams.category + '.html').success(function(data) {
-			$scope.foo = $sce.trustAsHtml(data);
+
+		$http.get('data/' + $routeParams.category + '/posts.json').success(function(data) {
+			$scope.posts = data;
+			$scope.totalItems = $scope.posts.length;
+		});
+	}
+]);
+
+app.controller('PostCtrl', ['$sce', '$scope', '$routeParams', '$http', 'MetaData',
+	function($sce, $scope, $routeParams, $http, MetaData) {
+		$http.get('data/' + $routeParams.category + '/posts.json').success(function(data) {
+			data.some(function(post) {
+				if (post.slug === $routeParams.slug) {
+					MetaData.setTitle(post.metaTitle);
+					MetaData.setDescription(post.metaDescription);
+					$scope.post = post;
+					return true;
+				}
+			});
+		});
+		$http.get('data/' + $routeParams.category + '/' + $routeParams.slug + '.html').success(function(data) {
+			$scope.content = $sce.trustAsHtml(data);
 		});
 	}
 ]);

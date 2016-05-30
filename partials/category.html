@@ -1,0 +1,22 @@
+<h1 style="text-align: center;">{{category.title}}</h1>
+<hr>
+<ul class="list-thumbnail">
+    <article 
+        ng-repeat="post in posts | filter:search | offset: (currentPage - 1) * itemsPerPage | limitTo:itemsPerPage">
+        <a ng-href="/{{category.name}}/{{post.slug}}">
+            <li class="list-item-thumbnail">
+                <img class="image-responsive" ng-src="{{post.thumbnail}}" alt="">
+                <h2>{{post.title}}</h2>
+                <p class="lead">{{post.lead}}</p>
+            </li>
+        </a>
+    </article>
+     <uib-pagination  
+        ng-change="pageChanged()"
+        total-items="totalItems" 
+        items-per-page= "itemsPerPage"
+        ng-model="currentPage" 
+        class="pagination-sm">
+    </uib-pagination>
+</ul>
+<hr>
